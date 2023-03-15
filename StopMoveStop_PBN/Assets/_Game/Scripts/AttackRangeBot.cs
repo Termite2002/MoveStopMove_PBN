@@ -4,15 +4,5 @@ using UnityEngine;
 
 public class AttackRangeBot : AttackRange
 {
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
+    
 }

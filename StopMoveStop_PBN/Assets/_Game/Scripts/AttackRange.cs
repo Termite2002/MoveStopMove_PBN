@@ -7,11 +7,7 @@ public class AttackRange : MonoBehaviour
     public Character player;
     public float radius; 
     [SerializeField] private LineRenderer lineRenderer; 
-    void Start()
-    {
-    }
 
-    // Update is called once per frame
     void Update()
     {
         // Draw circle

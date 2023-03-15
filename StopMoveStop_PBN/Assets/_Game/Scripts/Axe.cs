@@ -2,41 +2,31 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Axe : MonoBehaviour
+public class Axe : Weapon
 {
-    [SerializeField] private float rotareSpeed;
-
-    private void OnEnable()
+    protected override void OnEnable()
     {
-        Invoke(nameof(DestroyAxe), 3f);
-
-        // Reset status of axe
-        transform.rotation = Quaternion.identity;
-        GetComponent<Rigidbody>().velocity = Vector3.zero;
-        GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
+        base.OnEnable();
+        transform.localEulerAngles = new Vector3(0f, 90f, 0f);
+        Invoke(nameof(DestroyWeapon), 3f);    
     }
-    void Start()
-    {
-        
+    protected override void OnDisable()
+    {     
+        CancelInvoke(nameof(DestroyWeapon));
+        base.OnDisable();
+        transform.localEulerAngles = new Vector3(0f, 90f, 0f);
     }
 
-    // Update is called once per frame
+    private void Start()
+    {
+        type = WeaponType.Axe;
+    }
     void FixedUpdate()
     {
-        transform.Rotate(Vector3.right, rotareSpeed);
+        transform.localEulerAngles += new Vector3(0, 0, -10);
     }
-    void DestroyAxe()
+    protected override void OnTriggerEnter(Collider other)
     {
-        ObjectPool.Instance.ReturnToPool(gameObject);
-        gameObject.SetActive(false);
-        
-    }
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Bot"))
-        {
-            Destroy(other.gameObject);
-            Destroy(gameObject);
-        }
+        base.OnTriggerEnter(other);
     }
 }

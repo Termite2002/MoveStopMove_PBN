@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class Player : Character
 {
@@ -8,31 +9,29 @@ public class Player : Character
     public override void Start()
     {
         base.Start();
+        isDead = false;
+        currentWeapon = (WeaponType)Enum.Parse(typeof(WeaponType), SaveLoadController.Instance.currentWeapon, true); 
     }
 
     // Update is called once per frame
     void Update()
     {
+        targetListInRange.RemoveAll(Character => Character == null);
+        targetListInRange.RemoveAll(Character => Character.GetComponent<Character>().isDead);
 
-    }
-    public Vector3 FindNearestBotInRange()
-    {
-        Vector3 nearestBotPotition = Vector3.zero;
-        float closestDistance = Mathf.Infinity;
-        Character removeCharacter = new Character();
-
-        foreach (Character character in targetListInRange)
+        if (Input.GetKeyDown(KeyCode.B))
         {
-            float distance = Vector3.Distance(character.GetComponent<Character>().transform.position, transform.position);
-
-            if (distance < closestDistance)
-            {
-                removeCharacter = character;
-                closestDistance = distance;
-                nearestBotPotition = character.GetComponent<Character>().transform.position;
-            }
+            currentWeapon = WeaponType.Boomerang;
         }
-        targetListInRange.Remove(removeCharacter);
-        return nearestBotPotition;
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            currentWeapon = WeaponType.Axe;
+        }
+    }
+
+    public void OnInit()
+    {
+        isDead = false;
+        targetListInRange.Clear();
     }
 }
