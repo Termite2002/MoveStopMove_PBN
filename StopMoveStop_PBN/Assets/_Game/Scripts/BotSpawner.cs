@@ -26,12 +26,15 @@ public class BotSpawner : MonoBehaviour
             hasPlayer = false;
         }
     }
-    public void SpawnBot()
+
+    public void SpawnBot(LevelController new_lv)
     {
+        lvController = new_lv;
         GameObject bot = ObjectPoolPro.Instance.GetFromPool("Bot");
         bot.transform.position = transform.position;
         bot.SetActive(true);
         bot.GetComponent<Bot>().isDead = false;
+        bot.GetComponent<Bot>().lvController = new_lv;
         lvController.allAlivePosition.Add(bot.GetComponent<Bot>());
     }
 }

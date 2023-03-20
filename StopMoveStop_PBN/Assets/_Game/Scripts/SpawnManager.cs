@@ -2,27 +2,37 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SpawnManager : MonoBehaviour
+public class SpawnManager : Singleton<SpawnManager>
 {
     [SerializeField] List<BotSpawner> spawnerList = new List<BotSpawner>();
-    public int playerOnGround = 0;
-    //int playerMax = 10;
+
+    public List<Character> allAlivePosition = new List<Character>();
+
+    public LevelController lvController;
     int currentSpawn;
-    void Start()
+
+    public void OnInitSpawn(LevelController new_lv)
     {
+        lvController = new_lv;
         currentSpawn = 0;
-        foreach(BotSpawner spawner in spawnerList)
+        foreach (BotSpawner spawner in spawnerList)
         {
-            spawner.SpawnBot();
-            playerOnGround++;
+            spawner.SpawnBot(lvController);
         }
     }
-
     public void Respawn()
     {
+        while (spawnerList[currentSpawn].hasPlayer)
+        {
+            currentSpawn++;
+            if (currentSpawn == spawnerList.Count)
+            {
+                currentSpawn = 0;
+            }
+        }
         if (!spawnerList[currentSpawn].hasPlayer)
         {
-            spawnerList[currentSpawn].SpawnBot();
+            spawnerList[currentSpawn].SpawnBot(lvController);
         }
         currentSpawn++;
         if(currentSpawn == spawnerList.Count)

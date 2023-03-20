@@ -7,7 +7,7 @@ public class SaveLoadController : Singleton<SaveLoadController>
 {
     Player player;
 
-    private int gold = 0;
+    public int gold = 0;
     public string currentWeapon;
     void Awake()
     {
@@ -35,11 +35,7 @@ public class SaveLoadController : Singleton<SaveLoadController>
             player = FindObjectOfType<Player>();
             SaveData();
         }
-        if (Input.GetMouseButtonDown(0))
-        {
-            gold++;
-        }
-        if(Input.GetKeyDown(KeyCode.L))
+        if (Input.GetKeyDown(KeyCode.L))
         {
             LevelManager.Instance.NextLevel();
         }
@@ -51,6 +47,6 @@ public class SaveLoadController : Singleton<SaveLoadController>
         data.gold = gold;
         data.currentWeapon = player.currentWeapon.ToString();
         SaveLoadManager.SaveData(data, "savegame.dat");
-        //Debug.Log(data.gold);
+        Debug.Log(data.gold);
     }
 }

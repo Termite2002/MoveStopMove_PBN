@@ -2,10 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CameraFollow : MonoBehaviour
+public class CameraFollow : Singleton<CameraFollow>
 {
     private Transform posPlayer;
-    private Vector3 camDistance;
+    public Vector3 camDistance;
     void Start()
     {
         GameObject temp = GameObject.FindGameObjectWithTag("Player");
@@ -14,7 +14,7 @@ public class CameraFollow : MonoBehaviour
     }
 
     // Update is called once per frame
-    void LateUpdate()
+    void FixedUpdate()
     {
         transform.position = posPlayer.transform.position - camDistance;
     }

@@ -5,7 +5,7 @@ using UnityEngine;
 public class LevelController : MonoBehaviour
 {
     public List<Character> allAlivePosition = new List<Character>();
-    public int allAlive = 99;
+    public int allAlive = 16;
 
     public void OnClearLevel()
     {
@@ -18,12 +18,26 @@ public class LevelController : MonoBehaviour
         }
         allAlivePosition.RemoveAll(Character => !Character.isPlayer);
 
-        allAlive = 99;
+        allAlive = 16;
     }
+
+    // Ham chua su dung
+    public void StopAllBot()
+    {
+        foreach (Character character in allAlivePosition)
+        {
+            if (!character.isPlayer)
+            {
+                character.GetComponent<Bot>().agent.isStopped = true;
+            }
+        }
+    }
+    
     private void Update()
     {
+
         allAlivePosition.RemoveAll(Character => Character == null);
         allAlivePosition.RemoveAll(Character => Character.GetComponent<Character>().isDead);
     }
-
+   
 }

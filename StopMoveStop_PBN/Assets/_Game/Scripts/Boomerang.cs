@@ -15,8 +15,9 @@ public class Boomerang : Weapon
         beginPos = transform.position;
         timer = 0;
     }
-    private void Start()
+    protected override void Start()
     {
+        base.Start();
         rb = GetComponent<Rigidbody>();
         type = WeaponType.Boomerang;
         timer = 0;

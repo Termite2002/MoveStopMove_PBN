@@ -114,6 +114,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rotareSpeed: 5
   type: 1
+  playerOwner: 0
+  player: {fileID: 0}
+  owner: {fileID: 0}
+  sizeRange: 3
 --- !u!65 &2318032945843771869
 BoxCollider:
   m_ObjectHideFlags: 0

@@ -5,7 +5,11 @@ using UnityEngine;
 public class Character : MonoBehaviour
 {
     public List<Character> targetListInRange = new List<Character>();
+    public List<GameObject> weaponList = new List<GameObject>();
+    public Dictionary<string, GameObject> weaponDict = new Dictionary<string, GameObject>();
     public bool isPlayer;
+    public AttackRange atkRange;
+
     [SerializeField] private Animator anim;
     private string currentAnimName;
 
@@ -15,16 +19,25 @@ public class Character : MonoBehaviour
     //public Transform targetPosition;
     [SerializeField] protected Transform throwPoint;
 
-    [SerializeField] private LevelController levelController;
-
     public bool isDead;
     public WeaponType currentWeapon;
-    public virtual void Start()
-    {
-        levelController = FindObjectOfType<LevelController>();
-        levelController.allAlivePosition.Add(this);
-    }
 
+    public int enemyKilled;
+
+    public Transform handPoint;
+    public GameObject currentWeaponToHold;
+
+    protected virtual void Start()
+    {
+        atkRange = GetComponentInChildren<AttackRange>();
+        AddWeaponToWeaponDict();
+    }
+    public virtual void AddWeaponToWeaponDict()
+    {
+        weaponDict.Add("Axe", weaponList[0]);
+        weaponDict.Add("Boomerang", weaponList[1]);
+        weaponDict.Add("Sword", weaponList[2]);
+    } 
     public virtual void Attack(Vector3 targetPosition) 
     {
         if (!isDead)
@@ -41,10 +54,30 @@ public class Character : MonoBehaviour
         weapon.transform.position = throwPoint.position;
         weapon.SetActive(true);
 
+
+        // Kiem tra xem vu khi co phai cua player ? 
+        if (isPlayer)
+        {
+            weapon.GetComponent<Weapon>().setOwner(null);
+            weapon.GetComponent<Weapon>().playerOwner = true;
+
+            SoundManager.Instance.PlaySFX(1);
+        }
+        else
+        {
+            weapon.GetComponent<Weapon>().setOwner(this);
+            weapon.GetComponent<Weapon>().playerOwner = false;
+        }
+
+        // Xac dinh huong nem
         Vector3 throwDirection = (targetPosition - throwPoint.position).normalized;
         weapon.GetComponent<Rigidbody>().AddForce(throwDirection * throwForce);
 
-        //weapon.transform.rotation = Quaternion.LookRotation(throwDirection);
+        if (weapon.GetComponent<Weapon>().type == WeaponType.Sword)
+        {
+            weapon.transform.rotation = Quaternion.LookRotation(throwDirection);
+        }
+
     }
     public virtual void ChangeAnim(string animName)
     {
@@ -77,5 +110,19 @@ public class Character : MonoBehaviour
         }
         //targetListInRange.Remove(removeCharacter);
         return nearestBotPotition;
+    }
+
+    public void RenderWeaponToHold()
+    {
+        if (currentWeaponToHold == null)
+        {
+            currentWeaponToHold = Instantiate(weaponDict[currentWeapon.ToString()], handPoint);
+        }
+        else
+        {
+            GameObject weaponTemp = currentWeaponToHold;
+            Destroy(weaponTemp);
+            currentWeaponToHold = Instantiate(weaponDict[currentWeapon.ToString()], handPoint);
+        }
     }
 }

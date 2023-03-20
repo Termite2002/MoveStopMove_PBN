@@ -1,3 +1,4 @@
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,10 +13,12 @@ public class Bot : Character
     private IState currentState;
     [SerializeField] private GameObject attackRange;
     [SerializeField] private SpawnManager spawnManager;
-    [SerializeField] private LevelController lvController;
+    public LevelController lvController;
 
-    public override void Start()
+
+    protected override void Start()
     {
+        base.Start();
         lvController = FindObjectOfType<LevelController>();
         spawnManager = FindObjectOfType<SpawnManager>();
         agent = GetComponent<NavMeshAgent>();
@@ -38,6 +41,8 @@ public class Bot : Character
     private void OnInit()
     {
         isDead = false;
+        ChooseRandomWeaponForBot();
+        RenderWeaponToHold();
         ChangeState(new IdleState());
     }
     public void ChangeTarget()
@@ -98,15 +103,29 @@ public class Bot : Character
         targetListInRange.Clear();
         ObjectPoolPro.Instance.ReturnToPool("Bot", gameObject);
         gameObject.SetActive(false);
-        lvController.allAlive--;
 
         // Respawn
-        spawnManager.Respawn();
+        if (lvController != null)
+        {
+            if (lvController.allAlive > 10)
+            {
+                spawnManager.Respawn();
+            }
+            lvController.allAlive--;
+            UIManager.Instance.SetAlive(lvController.allAlive);
+        }
     }
     public void RemoveFromFloor()
     {
         targetListInRange.Clear();
         ObjectPoolPro.Instance.ReturnToPool("Bot", gameObject);
         gameObject.SetActive(false);
+    }
+    public void ChooseRandomWeaponForBot()
+    {
+        ArrayList values = new ArrayList(System.Enum.GetValues(typeof(WeaponType)));
+        int randomIndex = Random.Range(0, values.Count);
+        WeaponType randomEnum = (WeaponType)System.Enum.ToObject(typeof(WeaponType), (int)values[randomIndex]);
+        currentWeapon = randomEnum;
     }
 }

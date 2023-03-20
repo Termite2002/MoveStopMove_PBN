@@ -27,32 +27,37 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
-        timer -= Time.deltaTime;
-        // When stop moving
-        if (joystick.Horizontal == 0 && joystick.Vertical == 0)
-        {
-            ChangeAnim("Idle");
-            if (oneHit == true && player.targetListInRange.Count > 0)
-            {
-                player.Attack(player.FindNearestBotInRange());
-                ChangeAnim("Attack");
-                oneHit = false;
-                timer = attackTime;
-            }
-        }
-        // When moving
-        else
-        {
-            if (timer <= 0)
-            {
-                float angle = Mathf.Atan2(joystick.Horizontal, joystick.Vertical) * Mathf.Rad2Deg;
-                transform.rotation = Quaternion.Euler(0f, angle, 0f);
 
-                ChangeAnim("Run");
-                rb.velocity = new Vector3(joystick.Horizontal * moveSpeed,
-                                rb.velocity.y,
-                                joystick.Vertical * moveSpeed);
-                oneHit = true;
+        if (!player.isDead)
+        {
+            timer -= Time.deltaTime;
+            // When stop moving
+            if (joystick.Horizontal == 0 && joystick.Vertical == 0)
+            {
+                ChangeAnim("Idle");
+                if (oneHit == true && player.targetListInRange.Count > 0)
+                {
+                    player.Attack(player.FindNearestBotInRange());
+                    //Debug.Log("Tan cong");
+                    ChangeAnim("Attack");
+                    oneHit = false;
+                    timer = attackTime;
+                }
+            }
+            // When moving
+            else
+            {
+                if (timer <= 0)
+                {
+                    float angle = Mathf.Atan2(joystick.Horizontal, joystick.Vertical) * Mathf.Rad2Deg;
+                    transform.rotation = Quaternion.Euler(0f, angle, 0f);
+
+                    ChangeAnim("Run");
+                    rb.velocity = new Vector3(joystick.Horizontal * moveSpeed,
+                                    rb.velocity.y,
+                                    joystick.Vertical * moveSpeed);
+                    oneHit = true;
+                }
             }
         }
     }

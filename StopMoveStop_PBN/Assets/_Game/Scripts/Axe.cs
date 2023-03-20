@@ -17,8 +17,9 @@ public class Axe : Weapon
         transform.localEulerAngles = new Vector3(0f, 90f, 0f);
     }
 
-    private void Start()
+    protected override void Start()
     {
+        base.Start();
         type = WeaponType.Axe;
     }
     void FixedUpdate()

@@ -131,13 +131,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetListInRange: []
+  weaponList:
+  - {fileID: 5353447026121787063, guid: 59125dcd8f2bc5f479f8df8f21f7d88c, type: 3}
+  - {fileID: 372000180994390900, guid: a2b0081a1c9cc4c4893148e30feafc88, type: 3}
+  - {fileID: 5340276680771387500, guid: 9a7d074026a53e247b5190ea050c5bd7, type: 3}
+  isPlayer: 0
+  atkRange: {fileID: 0}
   anim: {fileID: 4757782656127160861}
   throwForce: 275
   throwPoint: {fileID: 4486423667979814499}
   isDead: 0
-  currentWeapon: 0
+  currentWeapon: 7
+  enemyKilled: 0
+  handPoint: {fileID: 4231304923590113284}
+  currentWeaponToHold: {fileID: 0}
   agent: {fileID: 0}
   attackRange: {fileID: 4486423668359637692}
+  spawnManager: {fileID: 0}
+  lvController: {fileID: 0}
 --- !u!195 &4486423667412927804
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -418,5 +429,10 @@ Transform:
 --- !u!95 &4757782656127160861 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: -6057140222963153312, guid: 8a75d6593710046408c4269fb2cced20, type: 3}
+  m_PrefabInstance: {fileID: 7635779574469776509}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &4231304923590113284 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -3220319501169496967, guid: 8a75d6593710046408c4269fb2cced20, type: 3}
   m_PrefabInstance: {fileID: 7635779574469776509}
   m_PrefabAsset: {fileID: 0}
