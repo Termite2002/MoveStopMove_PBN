@@ -19,7 +19,7 @@ public class PatrolState : IState
         if(timer < randomTime)
         {
             bot.Moving();
-            if (timer > 0.5f && bot.targetListInRange.Count > 0 && !bot.isDead)
+            if (timer > 0.5f && bot.targetListInRange.Count > 0 && !bot.IsDead)
             {
                 bot.ChangeState(new AttackState());
             }

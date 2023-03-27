@@ -13,5 +13,5 @@ public class Data
 
     public string weaponOwner = "Axe_Boomerang";
 
-    public string currentWeapon = "Boomerang";
+    public string currentWeapon = Constant.WEAPON_BOOMERANG;
 }

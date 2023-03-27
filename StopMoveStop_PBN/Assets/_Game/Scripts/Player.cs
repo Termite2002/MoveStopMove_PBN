@@ -6,6 +6,7 @@ using System;
 public class Player : Character
 {
 
+
     protected override void Start()
     {
         base.Start();
@@ -18,13 +19,11 @@ public class Player : Character
     // Update is called once per frame
     void Update()
     {
-        if (isDead)
-        {
-            ChangeAnim("Dead");
-        }
+        //TODO: dang ton hieu nang k can thiet -> sua lai doan nay  (DONE)
+        //targetListInRange.RemoveAll(Character => Character == null);
+        //targetListInRange.RemoveAll(Character => Character.IsDead);
 
-        targetListInRange.RemoveAll(Character => Character == null);
-        targetListInRange.RemoveAll(Character => Character.GetComponent<Character>().isDead);
+#if UNITY_EDITOR
 
         // test
         if (Input.GetKeyDown(KeyCode.B))
@@ -45,6 +44,7 @@ public class Player : Character
             ChangeWeapon.Instance.ChangeRangeWhenChangeWeapon(currentWeapon, this);
             RenderWeaponToHold();
         }
+#endif
     }
 
     public void OnInit()
@@ -52,7 +52,14 @@ public class Player : Character
         enemyKilled = 0;
         isDead = false;
         targetListInRange.Clear();
+        atkRange.ResetSize();
         ChangeWeapon.Instance.ChangeRangeWhenChangeWeapon(currentWeapon, this);
     }
-
+    public void OnDespawn()
+    {
+        isDead = true;
+        ChangeAnim(Constant.ANIM_DEATH);
+        //SoundManager.Instance.PlaySFX(3);
+        SoundManager.Instance.PlaySound(3);
+    }
 }

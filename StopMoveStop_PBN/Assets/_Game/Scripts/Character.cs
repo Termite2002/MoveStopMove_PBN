@@ -19,7 +19,11 @@ public class Character : MonoBehaviour
     //public Transform targetPosition;
     [SerializeField] protected Transform throwPoint;
 
-    public bool isDead;
+    protected bool isDead;
+    //public bool IsDead => isDead;
+
+    public bool IsDead { get => isDead; set => isDead = value; }
+
     public WeaponType currentWeapon;
 
     public int enemyKilled;
@@ -27,56 +31,92 @@ public class Character : MonoBehaviour
     public Transform handPoint;
     public GameObject currentWeaponToHold;
 
+    protected Transform tf;
+    public Transform TF
+    {
+        get
+        {
+            if (tf == null)
+            {
+                tf = transform;
+            }
+            return tf;
+        }
+    }
+
     protected virtual void Start()
     {
-        atkRange = GetComponentInChildren<AttackRange>();
+        //TODO: khong duoc dung (DONE)
+        //atkRange = GetComponentInChildren<AttackRange>();
         AddWeaponToWeaponDict();
     }
     public virtual void AddWeaponToWeaponDict()
     {
-        weaponDict.Add("Axe", weaponList[0]);
-        weaponDict.Add("Boomerang", weaponList[1]);
-        weaponDict.Add("Sword", weaponList[2]);
-    } 
+        weaponDict.Add(Constant.WEAPON_AXE, weaponList[0]);
+        weaponDict.Add(Constant.WEAPON_BOOMERANG, weaponList[1]);
+        weaponDict.Add(Constant.WEAPON_SWORD, weaponList[2]);
+    }
+    public void RefreshEnemyInRange()
+    {
+        for (int i = 0; i < targetListInRange.Count; i++)
+        {
+            if (Vector3.Distance(TF.position, targetListInRange[i].TF.position) - (atkRange.radius * atkRange.TF.localScale.x) > 1f)
+            {
+                targetListInRange.RemoveAt(i);
+            }
+        }
+
+        targetListInRange.RemoveAll(Character => Character == null);
+        targetListInRange.RemoveAll(Character => Character.IsDead);
+    }
     public virtual void Attack(Vector3 targetPosition) 
     {
-        if (!isDead)
+        if (!isDead && Vector3.Distance(TF.position, targetPosition) - (atkRange.radius * atkRange.TF.localScale.x) < 0.1f)
         {
+            //Debug.Log(atkRange.radius * atkRange.TF.localScale.x);
             Vector3 throwDirection = (targetPosition - throwPoint.position).normalized;
-            transform.rotation = Quaternion.LookRotation(throwDirection);
-            StartCoroutine(Throw(targetPosition));
+            //transform.rotation = Quaternion.LookRotation(throwDirection);
+            tf.LookAt(targetPosition);
+            StartCoroutine(IEThrow(targetPosition));
         }
     }
-    public IEnumerator Throw(Vector3 targetPosition)
+    public IEnumerator IEThrow(Vector3 targetPosition)
     {
         yield return new WaitForSeconds(0.5f);
-        GameObject weapon = ObjectPoolPro.Instance.GetFromPool(currentWeapon.ToString());
-        weapon.transform.position = throwPoint.position;
-        weapon.SetActive(true);
+        Weapon weapon = Cache.GetWeapon(ObjectPoolPro.Instance.GetFromPool(currentWeapon.ToString()));
+        weapon.TF.position = throwPoint.position;
+        weapon.gameObject.SetActive(true);
 
 
         // Kiem tra xem vu khi co phai cua player ? 
         if (isPlayer)
         {
-            weapon.GetComponent<Weapon>().setOwner(null);
-            weapon.GetComponent<Weapon>().playerOwner = true;
+            weapon.SetOwner(null);
+            weapon.playerOwner = true;
 
-            SoundManager.Instance.PlaySFX(1);
+            //SoundManager.Instance.PlaySFX(1);
+            SoundManager.Instance.PlaySound(1);
         }
         else
         {
-            weapon.GetComponent<Weapon>().setOwner(this);
-            weapon.GetComponent<Weapon>().playerOwner = false;
+            weapon.SetOwner(this);
+            weapon.playerOwner = false;
         }
 
         // Xac dinh huong nem
         Vector3 throwDirection = (targetPosition - throwPoint.position).normalized;
-        weapon.GetComponent<Rigidbody>().AddForce(throwDirection * throwForce);
+        //TODO: fix this (DONE)
 
-        if (weapon.GetComponent<Weapon>().type == WeaponType.Sword)
+        if (weapon.type == WeaponType.Sword)
         {
-            weapon.transform.rotation = Quaternion.LookRotation(throwDirection);
+            //weapon.TF.LookAt(throwDirection);
+            //weapon.GetComponent<Sword>().onAttack = true;
+            //weapon.GetComponent<Sword>().throwDirection = throwDirection;
+            weapon.TF.rotation = TF.rotation;
         }
+        weapon.RB.AddForce(throwDirection * throwForce);
+
+
 
     }
     public virtual void ChangeAnim(string animName)
@@ -98,13 +138,15 @@ public class Character : MonoBehaviour
         {
             if (character != null)
             {
-                float distance = Vector3.Distance(character.GetComponent<Character>().transform.position, transform.position);
+                //TODO: khong can getcomponent character o day'  (DONE)
+                //cache transform (DONE)
+                float distance = Vector3.Distance(character.TF.position, TF.position);
 
                 if (distance < closestDistance)
                 {
                     removeCharacter = character;
                     closestDistance = distance;
-                    nearestBotPotition = character.GetComponent<Character>().transform.position;
+                    nearestBotPotition = character.TF.position;
                 }
             }
         }

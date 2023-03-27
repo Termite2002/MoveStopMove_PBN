@@ -11,8 +11,8 @@ public class Boomerang : Weapon
     protected override void OnEnable()
     {
         base.OnEnable();
-        transform.localEulerAngles = new Vector3(90f, 0, 0);
-        beginPos = transform.position;
+        TF.localEulerAngles = new Vector3(90f, 0, 0);
+        beginPos = TF.position;
         timer = 0;
     }
     protected override void Start()
@@ -25,7 +25,7 @@ public class Boomerang : Weapon
     void FixedUpdate()
     {
         //transform.Rotate(Vector3.down, rotareSpeed);
-        transform.localEulerAngles += new Vector3(0, 0, 10);
+        tf.localEulerAngles += new Vector3(0, 0, 10);
     }
     void Update()
     {
@@ -33,8 +33,9 @@ public class Boomerang : Weapon
         if (timer > 2f)
         {
             rb.velocity = Vector3.zero;
-            transform.position = Vector3.MoveTowards(transform.position, beginPos, returnSpeed*Time.deltaTime);
-            if (Vector3.Distance(transform.position, beginPos) < 0.2f)
+            //TODO: cache transform (DONE)
+            tf.position = Vector3.MoveTowards(TF.position, beginPos, returnSpeed*Time.deltaTime);
+            if (Vector3.Distance(TF.position, beginPos) < 0.2f)
             {
                 DestroyWeapon();
             }

@@ -5,36 +5,46 @@ using UnityEngine;
 public class AttackRange : MonoBehaviour
 {
     public Character player;
-    public float radius; 
-    [SerializeField] private LineRenderer lineRenderer; 
+    public float radius;
 
-    void Update()
+    private Vector3 beginSize;
+    [SerializeField] private LineRenderer lineRenderer;
+
+    protected Transform tf;
+    public Transform TF
     {
-        // Draw circle
-        //Vector3[] positions = new Vector3[500];
-        //for (int i = 0; i < positions.Length; i++)
-        //{
-        //    float angle = i * Mathf.PI * 2 / positions.Length;
-        //    Vector3 position = transform.position + new Vector3(Mathf.Cos(angle), 0, Mathf.Sin(angle)) * radius;
-        //    positions[i] = position;
-        //}
-
-        
-        //lineRenderer.positionCount = positions.Length;
-        //lineRenderer.SetPositions(positions);
+        get
+        {
+            if (tf == null)
+            {
+                tf = transform;
+            }
+            return tf;
+        }
     }
+    private void Start()
+    {
+        radius = GetComponent<SphereCollider>().radius;
+        beginSize = TF.localScale;
+    }
+    //TODO: cache getcomponent (DONE)
     protected virtual void OnTriggerEnter(Collider other)
     {
-        if (other.GetComponent<Character>() is Character)
+        if (Cache.GetCharacter(other) is Character)
         {
-            player.targetListInRange.Add(other.GetComponent<Character>());
+            player.targetListInRange.Add(Cache.GetCharacter(other));
         }
     }
     protected virtual void OnTriggerExit(Collider other)
     {
-        if (other.GetComponent<Character>() is Character)
+        if (Cache.GetCharacter(other) is Character)
         {
-            player.targetListInRange.Remove(other.GetComponent<Character>());
+            player.targetListInRange.Remove(Cache.GetCharacter(other));
         }
+    }
+
+    public void ResetSize()
+    {
+        TF.localScale = beginSize;
     }
 }

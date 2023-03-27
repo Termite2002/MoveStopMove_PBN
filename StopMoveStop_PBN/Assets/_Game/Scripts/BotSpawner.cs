@@ -4,36 +4,66 @@ using UnityEngine;
 
 public class BotSpawner : MonoBehaviour
 {
-    public bool hasPlayer;
+    public SphereCollider sCollider;
     [SerializeField] private LevelController lvController;
+    [SerializeField] private float radius;
+
+    protected Transform tf;
+    public Transform TF
+    {
+        get
+        {
+            if (tf == null)
+            {
+                tf = transform;
+            }
+            return tf;
+        }
+    }
 
     private void Start()
     {
         lvController = FindObjectOfType<LevelController>();
+        sCollider = GetComponent<SphereCollider>();
+        radius = 10.375f;
     }
 
-    private void OnTriggerStay(Collider other)
+    //TODO: han che (DONE)
+    //private void OnTriggerStay(Collider other)
+    //{
+    //    if (other.GetComponent<Character>() is Character)
+    //    {
+    //        hasPlayer = true;
+    //    }
+    //}
+    //private void OnTriggerExit(Collider other)
+    //{
+    //    if (other.GetComponent<Character>() is Character)
+    //    {
+    //        hasPlayer = false;
+    //    }
+    //}
+
+    public bool CheckIfHasEnemyInRange()
     {
-        if (other.GetComponent<Character>() is Character)
+        Collider[] colliders = Physics.OverlapSphere(tf.position, radius);
+        foreach (Collider collider in colliders)
         {
-            hasPlayer = true;
+            if (collider.CompareTag(Constant.GAME_BOT) || collider.CompareTag(Constant.GAME_PLAYER))
+            {
+                return true;
+            }
         }
-    }
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.GetComponent<Character>() is Character)
-        {
-            hasPlayer = false;
-        }
+        return false;
     }
 
     public void SpawnBot(LevelController new_lv)
     {
         lvController = new_lv;
         GameObject bot = ObjectPoolPro.Instance.GetFromPool("Bot");
-        bot.transform.position = transform.position;
+        bot.transform.position = TF.position;
         bot.SetActive(true);
-        bot.GetComponent<Bot>().isDead = false;
+        bot.GetComponent<Bot>().IsDead = false;
         bot.GetComponent<Bot>().lvController = new_lv;
         lvController.allAlivePosition.Add(bot.GetComponent<Bot>());
     }

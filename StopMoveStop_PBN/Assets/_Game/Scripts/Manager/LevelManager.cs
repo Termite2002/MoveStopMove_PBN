@@ -6,33 +6,17 @@ public class LevelManager : Singleton<LevelManager>
 {
     public List<Level> levelList = new List<Level>();
     public Player player;
+
+
+
     Level currentLevel;
 
     [SerializeField] private LevelController lvController;
 
     int level = 1;
-    private void Awake()
-    {
-        LoadLevel(1);
-        lvController = FindObjectOfType<LevelController>();
-    }
 
-    void Update()
-    {
-        if (lvController.allAlive <= 1)
-        {
-            UIManager.Instance.OpenWinUI();
+    //TODO: k can dung update -> toi uu (DONE)
 
-            SoundManager.Instance.PlaySFX(4);
-            //lvController.StopAllBot();
-        }
-        if (player.isDead)
-        {
-            UIManager.Instance.OpenLoseUI();
-
-            SoundManager.Instance.PlaySFX(0);
-        }
-    }
 
     public void LoadLevel()
     {
@@ -47,22 +31,61 @@ public class LevelManager : Singleton<LevelManager>
             Destroy(currentLevel.gameObject);
         }
         currentLevel = Instantiate(levelList[indexLevel - 1]);
+        //lvController = currentLevel.levelController;
         lvController = FindObjectOfType<LevelController>();
         lvController.allAlivePosition.Add(player);
         SpawnManager.Instance.OnInitSpawn(lvController);
-        UIManager.Instance.SetAlive(lvController.allAlive);
+        //MyUIManager.Instance.SetAlive(lvController.allAlive);
+    }
+    public void DeleteLevel()
+    {
+        if (currentLevel != null)
+        {
+            lvController.OnClearLevel();
+            Destroy(currentLevel.gameObject);
+        }
+
+        player.OnInit();
+        player.ChangeAnim(Constant.ANIM_IDLE);
     }
     public void OnInit()
     {
-        player.transform.position = currentLevel.startPoint.transform.position;
+        //TODO: cache transform (DONE)
+        player.TF.position = currentLevel.startPoint.position;
         player.OnInit();
-        player.isDead = false;
-        player.ChangeAnim("Idle");
+        //TODO: cache string (DONE)
+        player.ChangeAnim(Constant.ANIM_IDLE);
     }
     public void NextLevel()
     {
         level++;
 
         LoadLevel();
+    }
+    public void CheckIfPlayerWin()
+    {
+        if (lvController.allAlive <= 1)
+        {
+            //MyUIManager.Instance.OpenWinUI();
+            UIManager.Instance.OpenUI<UIWin>();
+
+            SoundManager.Instance.PlaySound(4);
+            //lvController.StopAllBot();
+        }
+    }
+    public void WhenPlayerLose()
+    {
+        if (player.IsDead)
+        {
+            UIManager.Instance.OpenUI<UILose>();
+
+            SoundManager.Instance.PlaySound(0);
+        }
+    }
+    public void OnStart()
+    {
+        LoadLevel(1);
+        lvController = FindObjectOfType<LevelController>();
+        player.GetComponent<PlayerController>().enabled = true;
     }
 }

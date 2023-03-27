@@ -11,7 +11,7 @@ public class DeadState : IState
 
     public void OnExecute(Bot bot)
     {
-        if (!bot.isDead)
+        if (!bot.IsDead)
         {
             bot.ChangeState(new IdleState());
         }

@@ -9,13 +9,27 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float moveSpeed;
     [SerializeField] private Player player;
     private Rigidbody rb;
-    private bool oneHit;
+    [SerializeField] private bool oneHit;
 
     [SerializeField] private Animator anim;
-    private string currentAnimName = "Idle";
+    private string currentAnimName = Constant.ANIM_IDLE;
 
     [SerializeField] private float attackTime;
     private float timer;
+
+    private Transform tf;
+    public Transform TF
+    {
+        get
+        {
+            if (tf == null)
+            {
+                tf = transform;
+            }
+            return tf;
+        }
+    }
+
     void Start()
     {
         player = GetComponent<Player>();
@@ -28,20 +42,24 @@ public class PlayerController : MonoBehaviour
     void FixedUpdate()
     {
 
-        if (!player.isDead)
+        if (!player.IsDead)
         {
             timer -= Time.deltaTime;
             // When stop moving
             if (joystick.Horizontal == 0 && joystick.Vertical == 0)
             {
-                ChangeAnim("Idle");
+                ChangeAnim(Constant.ANIM_IDLE);
                 if (oneHit == true && player.targetListInRange.Count > 0)
                 {
-                    player.Attack(player.FindNearestBotInRange());
-                    //Debug.Log("Tan cong");
-                    ChangeAnim("Attack");
-                    oneHit = false;
-                    timer = attackTime;
+                    player.RefreshEnemyInRange();
+                    if (player.targetListInRange.Count > 0)
+                    {
+                        player.Attack(player.FindNearestBotInRange());
+                        //Debug.Log("Tan cong");
+                        ChangeAnim(Constant.ANIM_ATTACK);
+                        oneHit = false;
+                        timer = attackTime;
+                    }
                 }
             }
             // When moving
@@ -50,9 +68,9 @@ public class PlayerController : MonoBehaviour
                 if (timer <= 0)
                 {
                     float angle = Mathf.Atan2(joystick.Horizontal, joystick.Vertical) * Mathf.Rad2Deg;
-                    transform.rotation = Quaternion.Euler(0f, angle, 0f);
+                    TF.rotation = Quaternion.Euler(0f, angle, 0f);
 
-                    ChangeAnim("Run");
+                    ChangeAnim(Constant.ANIM_RUN);
                     rb.velocity = new Vector3(joystick.Horizontal * moveSpeed,
                                     rb.velocity.y,
                                     joystick.Vertical * moveSpeed);

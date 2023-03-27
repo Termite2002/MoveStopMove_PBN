@@ -16,7 +16,7 @@ public class IdleState : IState
     public void OnExecute(Bot bot)
     {
         timer += Time.deltaTime;
-        if (bot.targetListInRange.Count > 0 && !bot.isDead)
+        if (bot.targetListInRange.Count > 0 && !bot.IsDead)
         {
             bot.ChangeState(new AttackState());
         }

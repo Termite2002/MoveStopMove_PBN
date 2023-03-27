@@ -7,14 +7,16 @@ public class Axe : Weapon
     protected override void OnEnable()
     {
         base.OnEnable();
-        transform.localEulerAngles = new Vector3(0f, 90f, 0f);
+        //TF.localEulerAngles = new Vector3(0f, 90f, 0f);
+        TF.localEulerAngles = new Vector3(90f, 0, 0);
         Invoke(nameof(DestroyWeapon), 3f);    
     }
     protected override void OnDisable()
     {     
         CancelInvoke(nameof(DestroyWeapon));
         base.OnDisable();
-        transform.localEulerAngles = new Vector3(0f, 90f, 0f);
+        //TF.localEulerAngles = new Vector3(0f, 90f, 0f);
+        TF.localEulerAngles = new Vector3(90f, 0, 0);
     }
 
     protected override void Start()
@@ -24,7 +26,7 @@ public class Axe : Weapon
     }
     void FixedUpdate()
     {
-        transform.localEulerAngles += new Vector3(0, 0, -10);
+        tf.localEulerAngles += new Vector3(0, 0, 10);
     }
     protected override void OnTriggerEnter(Collider other)
     {

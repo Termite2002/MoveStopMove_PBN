@@ -11,7 +11,6 @@ public class Bot : Character
 
     private int targetIndex;
     private IState currentState;
-    [SerializeField] private GameObject attackRange;
     [SerializeField] private SpawnManager spawnManager;
     public LevelController lvController;
 
@@ -28,9 +27,10 @@ public class Bot : Character
     // Update is called once per frame
     void Update()
     {
-        targetListInRange.RemoveAll(Character => Character == null);
+        //TODO: fix lai  (DONE)
+        //targetListInRange.RemoveAll(Character => Character == null);
 
-        targetListInRange.RemoveAll(Character => Character.GetComponent<Character>().isDead);
+        //targetListInRange.RemoveAll(Character => Character.GetComponent<Character>().IsDead);
         
 
         if (currentState != null && !isDead)
@@ -41,14 +41,23 @@ public class Bot : Character
     private void OnInit()
     {
         isDead = false;
+        //atkRange.ResetSize();
         ChooseRandomWeaponForBot();
         RenderWeaponToHold();
         ChangeState(new IdleState());
     }
+    public void OnDespawn()
+    {
+        IsDead = true;
+        ChangeState(new DeadState());
+        ChangeAnim(Constant.ANIM_DEATH);
+        DestroyBot();
+    }
     public void ChangeTarget()
     {
+        lvController.UpdateAllAliveList();
         targetIndex = Random.Range(0, lvController.allAlivePosition.Count);
-        while (lvController.allAlivePosition[targetIndex] != null && Vector3.Distance(transform.position, lvController.allAlivePosition[targetIndex].transform.position) < 0.05f)
+        while (lvController.allAlivePosition[targetIndex] != null && Vector3.Distance(TF.position, lvController.allAlivePosition[targetIndex].TF.position) < 0.05f)
         {
             targetIndex = Random.Range(0, lvController.allAlivePosition.Count);
         }
@@ -56,7 +65,9 @@ public class Bot : Character
     public void Moving()
     {
         agent.isStopped = false;
-        ChangeAnim("Run");
+        //cache string  (DONE)
+        ChangeAnim(Constant.ANIM_RUN);
+        lvController.UpdateAllAliveList();
         if (targetIndex >= lvController.allAlivePosition.Count)
         {
             ChangeTarget();
@@ -64,7 +75,7 @@ public class Bot : Character
         if (lvController.allAlivePosition[targetIndex] != null)
         {
             //Debug.Log(LevelController.Instance.allAlivePosition[targetIndex].transform.position);
-            agent.destination = lvController.allAlivePosition[targetIndex].transform.position;
+            agent.destination = lvController.allAlivePosition[targetIndex].TF.position;
         }
     }
     public void ChangeState(IState newState)
@@ -81,27 +92,27 @@ public class Bot : Character
     }
     public void StopMoving()
     {
-        ChangeAnim("Idle");
+        ChangeAnim(Constant.ANIM_IDLE);
         
         agent.isStopped = true;
     }
     public override void Attack(Vector3 targetPosition)
     {
-        ChangeAnim("Attack");
-        transform.LookAt(targetPosition);
+        ChangeAnim(Constant.ANIM_ATTACK);
+        TF.LookAt(targetPosition);
         base.Attack(targetPosition);
     }
 
     public void DestroyBot()
     {
         targetListInRange.Clear();
-        StartCoroutine(Dying());
+        StartCoroutine(IEDying());
     }
-    public IEnumerator Dying()
+    public IEnumerator IEDying()
     {
-        yield return new WaitForSeconds(3f);
-        targetListInRange.Clear();
-        ObjectPoolPro.Instance.ReturnToPool("Bot", gameObject);
+        yield return new WaitForSeconds(2.5f);
+        //targetListInRange.Clear();
+        ObjectPoolPro.Instance.ReturnToPool(Constant.GAME_BOT, gameObject);
         gameObject.SetActive(false);
 
         // Respawn
@@ -112,13 +123,14 @@ public class Bot : Character
                 spawnManager.Respawn();
             }
             lvController.allAlive--;
-            UIManager.Instance.SetAlive(lvController.allAlive);
+            //MyUIManager.Instance.SetAlive(lvController.allAlive);
+            LevelManager.Instance.CheckIfPlayerWin();
         }
     }
     public void RemoveFromFloor()
     {
         targetListInRange.Clear();
-        ObjectPoolPro.Instance.ReturnToPool("Bot", gameObject);
+        ObjectPoolPro.Instance.ReturnToPool(Constant.GAME_BOT, gameObject);
         gameObject.SetActive(false);
     }
     public void ChooseRandomWeaponForBot()

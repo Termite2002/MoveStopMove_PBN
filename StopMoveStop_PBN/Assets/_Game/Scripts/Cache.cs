@@ -1,0 +1,29 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public static class Cache 
+{
+    private static Dictionary<Collider, Character> characters = new Dictionary<Collider, Character>();
+    private static Dictionary<GameObject, Weapon> weapons = new Dictionary<GameObject, Weapon>();
+
+    public static Character GetCharacter(Collider collider)
+    {
+        if (!characters.ContainsKey(collider))
+        {
+            characters.Add(collider, collider.GetComponent<Character>());
+        }
+
+        return characters[collider];
+    }
+
+    public static Weapon GetWeapon(GameObject weaponObject)
+    {
+        if (!weapons.ContainsKey(weaponObject))
+        {
+            weapons.Add(weaponObject, weaponObject.GetComponent<Weapon>());
+        }
+
+        return weapons[weaponObject];
+    }
+}

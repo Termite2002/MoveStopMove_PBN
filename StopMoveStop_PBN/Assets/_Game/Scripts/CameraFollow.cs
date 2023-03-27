@@ -6,16 +6,30 @@ public class CameraFollow : Singleton<CameraFollow>
 {
     private Transform posPlayer;
     public Vector3 camDistance;
+
+    private Transform tf;
+    public Transform TF
+    {
+        get
+        {
+            if (tf == null)
+            {
+                tf = transform;
+            }
+            return tf;
+        }
+    }
+
     void Start()
     {
         GameObject temp = GameObject.FindGameObjectWithTag("Player");
         posPlayer = temp.GetComponent<Transform>();
-        camDistance = posPlayer.transform.position - transform.position;
+        camDistance = posPlayer.position - TF.position;
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        transform.position = posPlayer.transform.position - camDistance;
+        TF.position = posPlayer.position - camDistance;
     }
 }

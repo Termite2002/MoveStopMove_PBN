@@ -7,10 +7,11 @@ public class AttackState : IState
     float timer;
     public void OnEnter(Bot bot)
     {
-        if (bot.isDead)
+        if (bot.IsDead)
         {
             bot.ChangeState(new DeadState());
         }
+        bot.RefreshEnemyInRange();
         if (bot.targetListInRange.Count > 0)
         {
             bot.StopMoving();
@@ -22,7 +23,7 @@ public class AttackState : IState
     public void OnExecute(Bot bot)
     {
         timer += Time.deltaTime;
-        if (timer >= 2f && !bot.isDead)
+        if (timer >= 2f && !bot.IsDead)
         {
             bot.ChangeState(new PatrolState());
         }

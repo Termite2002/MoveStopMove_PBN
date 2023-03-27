@@ -33,11 +33,17 @@ public class LevelController : MonoBehaviour
         }
     }
     
-    private void Update()
-    {
+    //private void Update()
+    //{
 
+    //    allAlivePosition.RemoveAll(Character => Character == null);
+    //    allAlivePosition.RemoveAll(Character => Character.IsDead);
+    //}
+
+    public void UpdateAllAliveList()
+    {
         allAlivePosition.RemoveAll(Character => Character == null);
-        allAlivePosition.RemoveAll(Character => Character.GetComponent<Character>().isDead);
+        allAlivePosition.RemoveAll(Character => Character.IsDead);
     }
    
 }

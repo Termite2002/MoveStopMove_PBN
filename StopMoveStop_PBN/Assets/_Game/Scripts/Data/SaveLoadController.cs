@@ -23,7 +23,7 @@ public class SaveLoadController : Singleton<SaveLoadController>
         else
         {
             gold = 0;
-            currentWeapon = "Boomerang";
+            currentWeapon = Constant.WEAPON_BOOMERANG;
         }
         //Debug.Log(data.gold);
     }

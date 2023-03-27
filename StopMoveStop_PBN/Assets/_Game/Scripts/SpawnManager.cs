@@ -22,15 +22,22 @@ public class SpawnManager : Singleton<SpawnManager>
     }
     public void Respawn()
     {
-        while (spawnerList[currentSpawn].hasPlayer)
+        int stop = 0;
+        while (spawnerList[currentSpawn].CheckIfHasEnemyInRange())
         {
+            stop++;
             currentSpawn++;
             if (currentSpawn == spawnerList.Count)
             {
                 currentSpawn = 0;
             }
+            if (stop > 10)
+            {
+                //Debug.Log("damn");
+                break;
+            }
         }
-        if (!spawnerList[currentSpawn].hasPlayer)
+        if (!spawnerList[currentSpawn].CheckIfHasEnemyInRange())
         {
             spawnerList[currentSpawn].SpawnBot(lvController);
         }

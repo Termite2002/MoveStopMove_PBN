@@ -11,53 +11,82 @@ public class Weapon : MonoBehaviour
     public Character owner;
 
     protected Rigidbody rb;
-    
+
+    public Rigidbody RB
+    {
+        get
+        {
+            if (rb == null)
+            {
+                rb = GetComponent<Rigidbody>();
+            }
+            return rb;
+        }
+    }
+
+    protected Transform tf;
+    public Transform TF
+    {
+        get
+        {
+            if (tf == null)
+            {
+                tf = transform;
+            }
+            return tf;
+        }
+    }
+
     protected virtual void OnEnable()
     {
-        GetComponent<Rigidbody>().velocity = Vector3.zero;
-        GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
+        RB.velocity = Vector3.zero;
+        RB.angularVelocity = Vector3.zero;
     }
     protected virtual void OnDisable()
     {
-        GetComponent<Rigidbody>().velocity = Vector3.zero;
-        GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
+        RB.velocity = Vector3.zero;
+        RB.angularVelocity = Vector3.zero;
     }
     protected virtual void Start()
     {
         player = FindObjectOfType<Player>();
+        rb = GetComponent<Rigidbody>();
     }
     protected virtual void OnTriggerEnter(Collider other)
     {
         // Collide with bot
-        if (other.CompareTag("Bot"))
+        //TODO: cache string (DONE)
+        if (other.CompareTag(Constant.GAME_BOT))
         {
-            Bot bot = other.GetComponent<Bot>();
-            bot.isDead = true;
-            bot.ChangeState(new DeadState());
-            bot.ChangeAnim("Dead");
-            bot.GetComponent<Bot>().DestroyBot();
+            Bot bot = Cache.GetCharacter(other) as Bot;
+            bot.OnDespawn();
             
             DestroyWeapon();
             
             // Check vu khi cua ai
             if (playerOwner)
             {
-                WhenPlayerKill();
-                SoundManager.Instance.PlaySFX(6);
+                WhenPlayerKill(bot);
+                //SoundManager.Instance.PlaySFX(6);
+                SoundManager.Instance.PlaySound(6);
             }
             else
             {
-                WhenBotKill();
+                if (Vector3.Distance(owner.TF.position, bot.TF.position) > 0.1f)
+                {
+                    WhenBotKill();
+                }
             }
         }
 
         // Collide with player
-        if (other.CompareTag("Player"))
+        if (other.CompareTag(Constant.GAME_PLAYER))
         {
-            Player player = other.GetComponent<Player>();
-            player.isDead = true;
+            Player player = Cache.GetCharacter(other) as Player; 
+            player.OnDespawn();
+            LevelManager.Instance.WhenPlayerLose();
 
-            SoundManager.Instance.PlaySFX(3);
+            DestroyWeapon();
         }
     }
     protected virtual void DestroyWeapon()
@@ -65,25 +94,38 @@ public class Weapon : MonoBehaviour
         ObjectPoolPro.Instance.ReturnToPool(type.ToString(), gameObject);
         gameObject.SetActive(false);
     }
-    public void setOwner(Character bot) 
+    public void SetOwner(Character bot) 
     {
         owner = bot;
     }
-    void WhenPlayerKill()
+    void WhenPlayerKill(Character bot)
     {
         SaveLoadController.Instance.gold++;
+        player.targetListInRange.Remove(bot);
+        player.RefreshEnemyInRange();
         player.enemyKilled++;
         if (player.enemyKilled % 3 == 0)
         {
-            player.atkRange.transform.localScale += Vector3.one;
+            player.atkRange.TF.localScale += Vector3.one;
             CameraFollow.Instance.camDistance += new Vector3(0f, -2.5f, 2.5f);
 
-            SoundManager.Instance.PlaySFX(2);
+            //SoundManager.Instance.PlaySFX(2);
+            SoundManager.Instance.PlaySound(2);
         }
     }
     void WhenBotKill()
     {
-        owner.GetComponent<Character>().enemyKilled++;
-        owner.GetComponent<Character>().atkRange.transform.localScale += Vector3.one;
+        //TODO: owner dang la character roi k can getcomponent nua (DONE)
+        owner.enemyKilled++;
+        owner.RefreshEnemyInRange();
+        if (owner.enemyKilled % 3 == 0)
+        {
+            owner.atkRange.TF.localScale += Vector3.one;
+        }
+    }
+
+    public void Nem(Vector3 direct)
+    {
+        rb.AddForce(direct);
     }
 }

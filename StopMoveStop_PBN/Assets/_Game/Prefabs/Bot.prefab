@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 4486423667412927800}
   - component: {fileID: 4486423667412927803}
   - component: {fileID: 4486423667412927804}
+  - component: {fileID: 4335265965506420844}
   m_Layer: 0
   m_Name: Bot
   m_TagString: Bot
@@ -136,11 +137,10 @@ MonoBehaviour:
   - {fileID: 372000180994390900, guid: a2b0081a1c9cc4c4893148e30feafc88, type: 3}
   - {fileID: 5340276680771387500, guid: 9a7d074026a53e247b5190ea050c5bd7, type: 3}
   isPlayer: 0
-  atkRange: {fileID: 0}
+  atkRange: {fileID: 4486423668359637682}
   anim: {fileID: 4757782656127160861}
   throwForce: 275
   throwPoint: {fileID: 4486423667979814499}
-  isDead: 0
   currentWeapon: 7
   enemyKilled: 0
   handPoint: {fileID: 4231304923590113284}
@@ -171,6 +171,23 @@ NavMeshAgent:
   m_BaseOffset: 1
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &4335265965506420844
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4486423667412927941}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5dd462da48ed9b49a885f1a9cf94fe1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetColor: {r: 1, g: 0, b: 0, a: 1}
+  needBoxIndicator: 0
+  needArrowIndicator: 1
+  needDistanceText: 0
+  indicator: {fileID: 0}
 --- !u!1 &4486423667979814498
 GameObject:
   m_ObjectHideFlags: 0
