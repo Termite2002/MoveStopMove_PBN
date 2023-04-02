@@ -14,4 +14,13 @@ public class UIMainMenu : UICanvas
     {
         UIManager.Instance.OpenUI<UISetting>();
     }
+    public void ShopButton()
+    {
+        UIManager.Instance.OpenUI<UIShop>();
+        UIManager.Instance.OpenUI<UIHat>();
+
+        CameraFollow.Instance.StartZoomIn();
+
+        CloseDirectly();
+    }
 }

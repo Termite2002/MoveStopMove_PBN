@@ -7,6 +7,13 @@ public class CameraFollow : Singleton<CameraFollow>
     private Transform posPlayer;
     public Vector3 camDistance;
 
+    private Vector3 beginCam;
+    private Vector3 zoomIn = new Vector3(0.1f, -4f, 5f);
+
+    private int statusCam = 0;
+    public float smoothTime = 0.3f;
+    private Vector3 velocity = Vector3.zero;
+
     private Transform tf;
     public Transform TF
     {
@@ -25,11 +32,50 @@ public class CameraFollow : Singleton<CameraFollow>
         GameObject temp = GameObject.FindGameObjectWithTag("Player");
         posPlayer = temp.GetComponent<Transform>();
         camDistance = posPlayer.position - TF.position;
+        beginCam = camDistance;
     }
 
     // Update is called once per frame
-    void FixedUpdate()
+    void LateUpdate()
     {
+        //if (Input.GetKeyDown(KeyCode.Z))
+        //{
+        //    statusCam = 1;
+        //}
+        //if (Input.GetKeyDown(KeyCode.X))
+        //{
+        //    statusCam = 2;
+        //}
+        if (statusCam == 1)
+        {
+            ZoomIn();
+        }
+        if (statusCam == 2)
+        {
+            ZoomOut();
+        }
         TF.position = posPlayer.position - camDistance;
+    }
+    public void ZoomIn()
+    {
+        Vector3 curPos = camDistance;
+        Vector3 newPos = Vector3.SmoothDamp(curPos, zoomIn, ref velocity, smoothTime);
+
+        camDistance = newPos;
+    }
+    public void ZoomOut()
+    {
+        Vector3 curPos = camDistance;
+        Vector3 newPos = Vector3.SmoothDamp(curPos, beginCam, ref velocity, smoothTime);
+
+        camDistance = newPos;
+    }
+    public void StartZoomIn()
+    {
+        statusCam = 1;
+    }
+    public void StartZoomOut()
+    {
+        statusCam = 2;
     }
 }
