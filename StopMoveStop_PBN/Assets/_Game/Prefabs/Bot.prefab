@@ -141,12 +141,14 @@ MonoBehaviour:
   anim: {fileID: 4757782656127160861}
   throwForce: 275
   throwPoint: {fileID: 4486423667979814499}
+  bodyPoint: {fileID: 3040208598199476839}
   currentWeapon: 7
   enemyKilled: 0
   handPoint: {fileID: 4231304923590113284}
+  headPoint: {fileID: 2501109705702184725}
   currentWeaponToHold: {fileID: 0}
+  bloodHitEffect: {fileID: 6363678622992369917, guid: 485ecc55a074eec47bc3c058279dcbfb, type: 3}
   agent: {fileID: 0}
-  attackRange: {fileID: 4486423668359637692}
   spawnManager: {fileID: 0}
   lvController: {fileID: 0}
 --- !u!195 &4486423667412927804
@@ -377,6 +379,36 @@ LineRenderer:
     generateLightingData: 0
   m_UseWorldSpace: 1
   m_Loop: 0
+--- !u!1 &6340844807336441963
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3040208598199476839}
+  m_Layer: 0
+  m_Name: BloodHit
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3040208598199476839
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6340844807336441963}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 2.1, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 3210232965433786215}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &7635779574469776509
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -446,6 +478,11 @@ Transform:
 --- !u!95 &4757782656127160861 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: -6057140222963153312, guid: 8a75d6593710046408c4269fb2cced20, type: 3}
+  m_PrefabInstance: {fileID: 7635779574469776509}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &2501109705702184725 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -3800467336962686104, guid: 8a75d6593710046408c4269fb2cced20, type: 3}
   m_PrefabInstance: {fileID: 7635779574469776509}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &4231304923590113284 stripped

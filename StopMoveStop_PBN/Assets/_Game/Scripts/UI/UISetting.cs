@@ -5,19 +5,30 @@ using UnityEngine.UI;
 
 public class UISetting : UICanvas
 {
+    Player player;
     public Image soundOn, soundOff, vibrationOn, vibrationOff;
+    private void OnEnable()
+    {
+        //player = FindObjectOfType<Player>();
+        //player.GetComponent<PlayerController>().enabled = false;
+        ChangeAnim("OpenSetting");
+    }
     public void ContinueButton()
     {
-        CloseDirectly();
+        ChangeAnim("CloseSetting");
+        Close(0.5f);
     }
     public void HomeButton()
     {
         if (UIManager.Instance.IsOpened<UIMainMenu>())
         {
-            CloseDirectly();
+            ChangeAnim("CloseSetting");
+            Close(0.5f);
         }
         else
         {
+            ChangeAnim("CloseSetting");
+            Close(0.5f);
             UIManager.Instance.CloseAll();
             UIManager.Instance.OpenUI<UIMainMenu>();
         }

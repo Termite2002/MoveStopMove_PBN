@@ -36,9 +36,11 @@ public class UIManager : Singleton<UIManager>
     //canvas container, it should be a canvas - root
     //canvas chua dung cac canvas con, nen la mot canvas - root de chua cac canvas nay
     public Transform CanvasParentTF;
-
+    public RectTransform panel;
+    public Player player;
     #region Canvas
-
+    private const float STANDARD_WIDTH = 1080f;
+    private const float STANDARD_HEIGHT = 1920f;
     //open UI
     //mo UI canvas
     public T OpenUI<T>() where T : UICanvas
@@ -50,6 +52,22 @@ public class UIManager : Singleton<UIManager>
 
         return canvas as T;
     }
+    //private void Start()
+    //{
+    //    float ratio = Screen.height / Screen.width;
+
+    //    if (ratio >= 0.5625f) // Tỉ lệ 1080x1920
+    //    {
+    //        float scale = Screen.height / STANDARD_HEIGHT;
+    //        CanvasParentTF.localScale = new Vector3(scale, scale, 1f);
+    //    }
+    //    else // Tỉ lệ 720x1600
+    //    {
+    //        float scale = Screen.width / STANDARD_WIDTH;
+    //        CanvasParentTF.localScale = new Vector3(scale, scale, 1f);
+
+    //    }
+    //}
 
     //close UI directly
     //dong UI canvas ngay lap tuc

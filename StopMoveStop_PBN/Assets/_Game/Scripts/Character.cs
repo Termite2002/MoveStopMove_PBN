@@ -18,6 +18,7 @@ public class Character : MonoBehaviour
 
     //public Transform targetPosition;
     [SerializeField] protected Transform throwPoint;
+    [SerializeField] protected Transform bodyPoint;
 
     protected bool isDead;
     //public bool IsDead => isDead;
@@ -29,7 +30,9 @@ public class Character : MonoBehaviour
     public int enemyKilled;
 
     public Transform handPoint;
+    public Transform headPoint;
     public GameObject currentWeaponToHold;
+    public GameObject bloodHitEffect;
 
     protected Transform tf;
     public Transform TF
@@ -166,5 +169,10 @@ public class Character : MonoBehaviour
             Destroy(weaponTemp);
             currentWeaponToHold = Instantiate(weaponDict[currentWeapon.ToString()], handPoint);
         }
+    }
+    public virtual void BloodHitEffect()
+    {
+        GameObject obj = Instantiate(bloodHitEffect, bodyPoint.transform);
+        obj.transform.localPosition = Vector3.zero;
     }
 }

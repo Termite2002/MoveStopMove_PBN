@@ -44,6 +44,7 @@ public class Bot : Character
         //atkRange.ResetSize();
         ChooseRandomWeaponForBot();
         RenderWeaponToHold();
+        RenderHatToWear();
         ChangeState(new IdleState());
     }
     public void OnDespawn()
@@ -139,5 +140,12 @@ public class Bot : Character
         int randomIndex = Random.Range(0, values.Count);
         WeaponType randomEnum = (WeaponType)System.Enum.ToObject(typeof(WeaponType), (int)values[randomIndex]);
         currentWeapon = randomEnum;
+    }
+    public void RenderHatToWear()
+    {
+        GameObject hat = ObjectPoolPro.Instance.GetFromPool("HeadArrow");
+        hat.transform.position = headPoint.position;
+        hat.SetActive(true);
+        hat.transform.SetParent(headPoint);
     }
 }

@@ -14,6 +14,7 @@ public class Player : Character
         currentWeapon = (WeaponType)Enum.Parse(typeof(WeaponType), SaveLoadController.Instance.currentWeapon, true);
         RenderWeaponToHold();
         ChangeWeapon.Instance.ChangeRangeWhenChangeWeapon(currentWeapon, this);
+        LoadSkin();
     }
 
     // Update is called once per frame
@@ -61,5 +62,28 @@ public class Player : Character
         ChangeAnim(Constant.ANIM_DEATH);
         //SoundManager.Instance.PlaySFX(3);
         SoundManager.Instance.PlaySound(3);
+    }
+    public void LoadSkin()
+    {
+        Debug.Log("Load Skin");
+        if (SaveLoadController.Instance.currentSkin != -1)
+        {
+            WeaponShopController.Instance.ChooseSkin(SaveLoadController.Instance.currentSkin);
+        }
+        else
+        {
+            if (SaveLoadController.Instance.currentHat != -1)
+            {
+                WeaponShopController.Instance.ChooseHatToWear(SaveLoadController.Instance.currentHat);
+            }
+            if (SaveLoadController.Instance.currentPant != -1)
+            {
+                WeaponShopController.Instance.ChoosePantToWear(SaveLoadController.Instance.currentPant);
+            }
+            if (SaveLoadController.Instance.currentShield != -1)
+            {
+                WeaponShopController.Instance.ChooseShieldToHold(SaveLoadController.Instance.currentShield);
+            }
+        }
     }
 }

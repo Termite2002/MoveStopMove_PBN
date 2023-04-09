@@ -59,6 +59,7 @@ public class Weapon : MonoBehaviour
         if (other.CompareTag(Constant.GAME_BOT))
         {
             Bot bot = Cache.GetCharacter(other) as Bot;
+            bot.BloodHitEffect();
             bot.OnDespawn();
             
             DestroyWeapon();
@@ -67,7 +68,6 @@ public class Weapon : MonoBehaviour
             if (playerOwner)
             {
                 WhenPlayerKill(bot);
-                //SoundManager.Instance.PlaySFX(6);
                 SoundManager.Instance.PlaySound(6);
             }
             else
@@ -82,7 +82,8 @@ public class Weapon : MonoBehaviour
         // Collide with player
         if (other.CompareTag(Constant.GAME_PLAYER))
         {
-            Player player = Cache.GetCharacter(other) as Player; 
+            Player player = Cache.GetCharacter(other) as Player;
+            player.BloodHitEffect();
             player.OnDespawn();
             LevelManager.Instance.WhenPlayerLose();
 
@@ -101,6 +102,7 @@ public class Weapon : MonoBehaviour
     void WhenPlayerKill(Character bot)
     {
         SaveLoadController.Instance.gold++;
+        LevelManager.Instance.coinGainInLevel++;
         player.targetListInRange.Remove(bot);
         player.RefreshEnemyInRange();
         player.enemyKilled++;
@@ -122,10 +124,5 @@ public class Weapon : MonoBehaviour
         {
             owner.atkRange.TF.localScale += Vector3.one;
         }
-    }
-
-    public void Nem(Vector3 direct)
-    {
-        rb.AddForce(direct);
     }
 }

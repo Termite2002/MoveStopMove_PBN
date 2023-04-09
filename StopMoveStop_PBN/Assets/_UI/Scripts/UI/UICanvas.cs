@@ -8,7 +8,8 @@ public class UICanvas : MonoBehaviour
     public bool IsDestroyOnClose = false;
 
     protected RectTransform m_RectTransform;
-    private Animator m_Animator;
+    public Animator m_Animator;
+    public string currentAnimName;
     private float m_OffsetY = 0;
 
     private void Start()
@@ -21,20 +22,20 @@ public class UICanvas : MonoBehaviour
     protected void OnInit()
     {
         m_RectTransform = GetComponent<RectTransform>();
-        m_Animator = GetComponent<Animator>();
+        //m_Animator = GetComponent<Animator>();
 
         // xu ly tai tho
-        float ratio = (float)Screen.height / (float)Screen.width;
-        if (ratio > 2.1f)
-        {
-            Vector2 leftBottom = m_RectTransform.offsetMin;
-            Vector2 rightTop = m_RectTransform.offsetMax;
-            rightTop.y = -100f;
-            m_RectTransform.offsetMax = rightTop;
-            leftBottom.y = 0f;
-            m_RectTransform.offsetMin = leftBottom;
-            m_OffsetY = 100f;
-        }
+        //float ratio = (float)Screen.height / (float)Screen.width;
+        //if (ratio > 2.1f)
+        //{
+        //    Vector2 leftBottom = m_RectTransform.offsetMin;
+        //    Vector2 rightTop = m_RectTransform.offsetMax;
+        //    rightTop.y = -100f;
+        //    m_RectTransform.offsetMax = rightTop;
+        //    leftBottom.y = 0f;
+        //    m_RectTransform.offsetMin = leftBottom;
+        //    m_OffsetY = 100f;
+        //}
     }
 
     //Setup canvas to avoid flash UI
@@ -79,5 +80,13 @@ public class UICanvas : MonoBehaviour
     {
         Invoke(nameof(CloseDirectly), delayTime);
     }
-
+    public virtual void ChangeAnim(string animName)
+    {
+        if (currentAnimName != animName)
+        {
+            m_Animator.ResetTrigger(animName);
+            currentAnimName = animName;
+            m_Animator.SetTrigger(currentAnimName);
+        }
+    }
 }

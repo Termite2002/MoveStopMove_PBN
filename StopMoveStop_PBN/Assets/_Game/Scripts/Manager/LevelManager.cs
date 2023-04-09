@@ -14,7 +14,7 @@ public class LevelManager : Singleton<LevelManager>
     [SerializeField] private LevelController lvController;
 
     int level = 1;
-
+    public int coinGainInLevel = 0;
     //TODO: k can dung update -> toi uu (DONE)
 
 
@@ -35,6 +35,7 @@ public class LevelManager : Singleton<LevelManager>
         lvController = FindObjectOfType<LevelController>();
         lvController.allAlivePosition.Add(player);
         SpawnManager.Instance.OnInitSpawn(lvController);
+        coinGainInLevel = 0;
         //MyUIManager.Instance.SetAlive(lvController.allAlive);
     }
     public void DeleteLevel()
@@ -68,6 +69,7 @@ public class LevelManager : Singleton<LevelManager>
         {
             //MyUIManager.Instance.OpenWinUI();
             UIManager.Instance.OpenUI<UIWin>();
+            SaveLoadController.Instance.SaveData(player);
 
             SoundManager.Instance.PlaySound(4);
             //lvController.StopAllBot();
@@ -78,6 +80,7 @@ public class LevelManager : Singleton<LevelManager>
         if (player.IsDead)
         {
             UIManager.Instance.OpenUI<UILose>();
+            SaveLoadController.Instance.SaveData(player);
 
             SoundManager.Instance.PlaySound(0);
         }

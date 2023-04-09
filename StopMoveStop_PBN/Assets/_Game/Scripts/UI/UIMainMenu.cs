@@ -1,14 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UIMainMenu : UICanvas
 {
+    public Text coinText;
+    private void OnEnable()
+    {
+        ChangeAnim("OpenMenu");
+        coinText.text = SaveLoadController.Instance.gold.ToString();
+    }
     public void PlayButton()
     {
+        ChangeAnim("CloseMenu");
         UIManager.Instance.OpenUI<UIGameplay>();
         LevelManager.Instance.OnStart();
-        CloseDirectly();
+        Close(0.5f);
     }
     public void SettingButton()
     {
@@ -16,11 +24,20 @@ public class UIMainMenu : UICanvas
     }
     public void ShopButton()
     {
+        ChangeAnim("CloseMenu");
         UIManager.Instance.OpenUI<UIShop>();
-        UIManager.Instance.OpenUI<UIHat>();
 
         CameraFollow.Instance.StartZoomIn();
-
-        CloseDirectly();
+        WeaponShopController.Instance.BackToNormalSkin();
+        Close(0.5f);
     }
+    public void WeaponButton()
+    {
+        ChangeAnim("CloseMenu");
+        UIManager.Instance.OpenUI<UIWeapon>();
+
+        Close(0.5f);
+    }
+
+    
 }
