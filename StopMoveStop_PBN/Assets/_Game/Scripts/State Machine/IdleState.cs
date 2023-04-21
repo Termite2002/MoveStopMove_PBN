@@ -24,6 +24,10 @@ public class IdleState : IState
         {
             bot.ChangeState(new PatrolState());
         }
+        if (bot.agent.speed > 0)
+        {
+            bot.ChangeState(new PatrolState());
+        }
     }
 
     public void OnExit(Bot bot)

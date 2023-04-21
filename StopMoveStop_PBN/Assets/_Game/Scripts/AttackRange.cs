@@ -39,6 +39,8 @@ public class AttackRange : MonoBehaviour
     {
         if (Cache.GetCharacter(other) is Character)
         {
+            Cache.GetCharacter(other).aim.SetActive(false);
+
             player.targetListInRange.Remove(Cache.GetCharacter(other));
         }
     }

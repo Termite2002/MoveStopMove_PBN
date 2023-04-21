@@ -62,8 +62,8 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 8c9c2d8b199d0a8449859e833eef0eb4, type: 2}
-  - {fileID: 2100000, guid: 56f5e3cc0908e4c41a39422685e61cac, type: 2}
+  - {fileID: 2100000, guid: b7a56af70ed01c04890dc775b13bf1cd, type: 2}
+  - {fileID: 2100000, guid: b7a56af70ed01c04890dc775b13bf1cd, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -127,9 +127,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rotareSpeed: 0
-  type: 2
+  type: 8
   playerOwner: 0
   player: {fileID: 0}
   owner: {fileID: 0}
   onAttack: 0
-  throwDirection: {x: 0, y: 0, z: 0}
+  angle: 0

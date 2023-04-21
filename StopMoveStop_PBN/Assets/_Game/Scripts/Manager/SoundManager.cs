@@ -14,7 +14,7 @@ public class SoundManager : Singleton<SoundManager>
 
     private void Awake()
     {
-        Init(70, 70);
+        //Init(70, 70);
     }
 
     //public void PlaySFX(int sfxToPlay)
@@ -44,12 +44,12 @@ public class SoundManager : Singleton<SoundManager>
     }
     public void MuteSound()
     {
-        ChangeVolumeMusic(0);
-        ChangeVolumeSFX(0);
+        ChangeVolumeMusic(-80);
+        ChangeVolumeSFX(-80);
     }
     public void TurnOnMusic()
     {
-        ChangeVolumeMusic(70);
-        ChangeVolumeSFX(70);
+        ChangeVolumeMusic(0);
+        ChangeVolumeSFX(0);
     }
 }

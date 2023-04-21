@@ -27,7 +27,7 @@ public class UIShop : UICanvas
 
     private void OnEnable()
     {
-        ChangeAnim("OpenShop");
+        ChangeAnim(Constant.ANIM_OPEN_SHOP);
         coinText.text = SaveLoadController.Instance.gold.ToString();
 
         UIManager.Instance.player.ChangeAnim(Constant.ANIM_DANCE);
@@ -45,7 +45,7 @@ public class UIShop : UICanvas
     }
     public void CloseButton()
     {
-        ChangeAnim("CloseShop");
+        ChangeAnim(Constant.ANIM_CLOSE_SHOP);
         Close(1f);
 
         if (SaveLoadController.Instance.currentSkin != -1)

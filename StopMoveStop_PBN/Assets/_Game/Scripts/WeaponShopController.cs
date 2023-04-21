@@ -8,9 +8,9 @@ public class WeaponShopController : Singleton<WeaponShopController>
     public Transform displayPoint;
     public Material skin, pant;
 
-    [HideInInspector]
-    public string[] namesWeaponDisplay = { WEAPON_AXE, WEAPON_BOOMERANG, WEAPON_SWORD };
-    public int[] pricesWeaponDisplay = { PRICE_AXE, PRICE_BOOMERANG, PRICE_SWORD };
+    
+    public string[] namesWeaponDisplay = { WEAPON_AXE, WEAPON_BOOMERANG, WEAPON_SWORD, WEAPON_Z, WEAPON_CANDY, WEAPON_HAMMER, WEAPON_UZI};
+    public int[] pricesWeaponDisplay = { PRICE_AXE, PRICE_BOOMERANG, PRICE_SWORD, PRICE_Z };
     public int[] priceHat = { 100, 200, 300, 400, 500, 600, 700 };
     public int[] pricePant = { 100, 200, 300, 400, 500, 600, 700, 800, 900 };
     public int[] priceShield = { 100, 200 };

@@ -1,14 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-public enum WeaponType { Axe = 7, Boomerang = 6, Sword = 8};
+public enum WeaponType { Axe = 0, Boomerang = 1, Sword = 2, Z = 3, Candy = 4, Hammer = 5, Uzi = 6};
 public class Weapon : MonoBehaviour
 {
     [SerializeField] protected float rotareSpeed;
     public WeaponType type;
     public bool playerOwner;
     public Player player;
-    public Character owner;
+    public Bot owner;
 
     protected Rigidbody rb;
 
@@ -59,7 +59,7 @@ public class Weapon : MonoBehaviour
         if (other.CompareTag(Constant.GAME_BOT))
         {
             Bot bot = Cache.GetCharacter(other) as Bot;
-            bot.BloodHitEffect();
+            bot.PlayParticle(1);
             bot.OnDespawn();
             
             DestroyWeapon();
@@ -77,15 +77,21 @@ public class Weapon : MonoBehaviour
                     WhenBotKill();
                 }
             }
+            
         }
 
         // Collide with player
         if (other.CompareTag(Constant.GAME_PLAYER))
         {
             Player player = Cache.GetCharacter(other) as Player;
-            player.BloodHitEffect();
+            player.PlayParticle(1);
             player.OnDespawn();
             LevelManager.Instance.WhenPlayerLose();
+
+            if (SaveLoadController.Instance.vibrate == 1)
+            {
+                PhoneVibrate.Instance.VibrateDevice();
+            }
 
             DestroyWeapon();
         }
@@ -95,34 +101,46 @@ public class Weapon : MonoBehaviour
         ObjectPoolPro.Instance.ReturnToPool(type.ToString(), gameObject);
         gameObject.SetActive(false);
     }
-    public void SetOwner(Character bot) 
+    public void SetOwner(Bot bot) 
     {
         owner = bot;
     }
-    void WhenPlayerKill(Character bot)
+    void WhenPlayerKill(Bot bot)
     {
         SaveLoadController.Instance.gold++;
         LevelManager.Instance.coinGainInLevel++;
+        bot.aim.SetActive(false);
         player.targetListInRange.Remove(bot);
         player.RefreshEnemyInRange();
         player.enemyKilled++;
+        if (player.levelHeadPoint != null)
+        {
+            player.levelHeadPoint.ChangePointText(player.enemyKilled);
+        }
         if (player.enemyKilled % 3 == 0)
         {
-            player.atkRange.TF.localScale += Vector3.one;
-            CameraFollow.Instance.camDistance += new Vector3(0f, -2.5f, 2.5f);
+
+            player.PlayParticleForTime(2, 2);
+            player.bodyScale.localScale += new Vector3(0.1f, 0.1f, 0.1f);
+            player.atkRange.TF.localScale += new Vector3(0.1f, 0.1f, 0.1f);
+            CameraFollow.Instance.camDistance += new Vector3(0f, -0.5f, 0.5f);
 
             //SoundManager.Instance.PlaySFX(2);
-            SoundManager.Instance.PlaySound(2);
+            SoundManager.Instance.PlaySound(7);
         }
     }
     void WhenBotKill()
     {
         //TODO: owner dang la character roi k can getcomponent nua (DONE)
         owner.enemyKilled++;
+        if (owner.levelHeadPoint != null)
+        {
+            owner.levelHeadPoint.ChangePointText(owner.enemyKilled);
+        }
         owner.RefreshEnemyInRange();
         if (owner.enemyKilled % 3 == 0)
         {
-            owner.atkRange.TF.localScale += Vector3.one;
+            owner.bodyScale.localScale += new Vector3(0.1f, 0.1f, 0.1f);
         }
     }
 }

@@ -5,7 +5,7 @@ using UnityEngine;
 public class Sword : Weapon
 {
     public bool onAttack = false;
-    public Vector3 throwDirection;
+    public float angle;
     protected override void OnEnable()
     {
         base.OnEnable();
@@ -26,10 +26,9 @@ public class Sword : Weapon
     }
     private void Update()
     {
-        //if (onAttack)
-        //{
-        //    TF.rotation = Quaternion.Euler(90f, throwDirection.y, 0f);
-        //}
+
+        TF.localEulerAngles += new Vector3(0f, -10f, 0);
+      
     }
 
     protected override void OnTriggerEnter(Collider other)

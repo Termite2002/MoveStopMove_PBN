@@ -5,10 +5,14 @@ using System;
 
 public class Player : Character
 {
+    private Vector3 beginPos;
+    public HeadPoint levelHeadPoint;
+    public HeadPoint headpointPrefab;
 
 
     protected override void Start()
     {
+        beginPos = TF.position;
         base.Start();
         isDead = false;
         currentWeapon = (WeaponType)Enum.Parse(typeof(WeaponType), SaveLoadController.Instance.currentWeapon, true);
@@ -17,50 +21,26 @@ public class Player : Character
         LoadSkin();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        //TODO: dang ton hieu nang k can thiet -> sua lai doan nay  (DONE)
-        //targetListInRange.RemoveAll(Character => Character == null);
-        //targetListInRange.RemoveAll(Character => Character.IsDead);
-
-#if UNITY_EDITOR
-
-        // test
-        if (Input.GetKeyDown(KeyCode.B))
-        {
-            currentWeapon = WeaponType.Boomerang;
-            ChangeWeapon.Instance.ChangeRangeWhenChangeWeapon(currentWeapon, this);
-            RenderWeaponToHold();
-        }
-        if (Input.GetKeyDown(KeyCode.A))
-        {
-            currentWeapon = WeaponType.Axe;
-            ChangeWeapon.Instance.ChangeRangeWhenChangeWeapon(currentWeapon, this);
-            RenderWeaponToHold();
-        }
-        if (Input.GetKeyDown(KeyCode.S))
-        {
-            currentWeapon = WeaponType.Sword;
-            ChangeWeapon.Instance.ChangeRangeWhenChangeWeapon(currentWeapon, this);
-            RenderWeaponToHold();
-        }
-#endif
-    }
-
     public void OnInit()
     {
+        TF.position = beginPos;
         enemyKilled = 0;
         isDead = false;
         targetListInRange.Clear();
-        atkRange.ResetSize();
+        bodyScale.localScale = new Vector3(1f, 1f, 1f);
+        AddHeadPoint();
+        CameraFollow.Instance.ResetCam();
         ChangeWeapon.Instance.ChangeRangeWhenChangeWeapon(currentWeapon, this);
     }
     public void OnDespawn()
     {
+        if (levelHeadPoint != null)
+        {
+            Destroy(levelHeadPoint.gameObject);
+        }
         isDead = true;
         ChangeAnim(Constant.ANIM_DEATH);
-        //SoundManager.Instance.PlaySFX(3);
+
         SoundManager.Instance.PlaySound(3);
     }
     public void LoadSkin()
@@ -86,4 +66,13 @@ public class Player : Character
             }
         }
     }
+    public void AddHeadPoint()
+    {
+        levelHeadPoint = Instantiate(headpointPrefab); //ObjectPoolPro.Instance.GetFromPool(Constant.HEADPOINT);
+
+        levelHeadPoint.SetOwner(this);
+        levelHeadPoint.ChangePointText(enemyKilled);
+        levelHeadPoint.gameObject.SetActive(true);
+    }
+
 }

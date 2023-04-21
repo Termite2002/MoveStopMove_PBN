@@ -14,8 +14,8 @@ TagManager:
   - Water
   - UI
   - Weapon View
-  - 
-  - 
+  - City
+  - Range
   - 
   - 
   - 
@@ -42,4 +42,10 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Range
+    uniqueID: 3119194665
+    locked: 0
+  - name: City
+    uniqueID: 2322285115
     locked: 0

@@ -16,6 +16,7 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] private float attackTime;
     private float timer;
+    private float stopTime;
 
     private Transform tf;
     public Transform TF
@@ -37,6 +38,7 @@ public class PlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         oneHit = false;
         timer = 0;
+        stopTime = 0.3f;
     }
 
     void FixedUpdate()
@@ -44,6 +46,7 @@ public class PlayerController : MonoBehaviour
 
         if (!player.IsDead)
         {
+
             timer -= Time.deltaTime;
             // When stop moving
             if (joystick.Horizontal == 0 && joystick.Vertical == 0)
@@ -76,6 +79,11 @@ public class PlayerController : MonoBehaviour
                                     joystick.Vertical * moveSpeed);
                     oneHit = true;
                 }
+            }
+            if (timer <= 0)
+            {
+                oneHit = true;
+                stopTime = 0.3f;
             }
         }
     }

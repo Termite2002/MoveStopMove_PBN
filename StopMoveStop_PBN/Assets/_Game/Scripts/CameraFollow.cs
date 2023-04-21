@@ -38,14 +38,6 @@ public class CameraFollow : Singleton<CameraFollow>
     // Update is called once per frame
     void LateUpdate()
     {
-        //if (Input.GetKeyDown(KeyCode.Z))
-        //{
-        //    statusCam = 1;
-        //}
-        //if (Input.GetKeyDown(KeyCode.X))
-        //{
-        //    statusCam = 2;
-        //}
         if (statusCam == 1)
         {
             ZoomIn();
@@ -77,5 +69,9 @@ public class CameraFollow : Singleton<CameraFollow>
     public void StartZoomOut()
     {
         statusCam = 2;
+    }
+    public void ResetCam()
+    {
+        camDistance = beginCam;
     }
 }

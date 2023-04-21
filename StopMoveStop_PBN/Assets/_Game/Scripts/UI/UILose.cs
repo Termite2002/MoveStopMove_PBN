@@ -9,6 +9,10 @@ public class UILose : UICanvas
     private void OnEnable()
     {
         coinGain.text = LevelManager.Instance.coinGainInLevel.ToString();
+        if (UIManager.Instance.IsOpened<UISetting>())
+        {
+            UIManager.Instance.CloseUI<UISetting>();
+        }
     }
     public void HomeButton()
     {

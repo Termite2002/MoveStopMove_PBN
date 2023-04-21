@@ -7,6 +7,7 @@ public class SaveLoadController : Singleton<SaveLoadController>
 {
     Player player;
 
+    public int vibrate;
     public int gold = 0;
     public int currentHat, currentPant, currentShield, currentSkin;
 
@@ -21,6 +22,7 @@ public class SaveLoadController : Singleton<SaveLoadController>
         Data data = SaveLoadManager.LoadData("savegame.dat") as Data;
         if (data != null)
         {
+            vibrate = 1;
             // Owner
             weaponOwner = data.weaponOwner;
             hatOwner = data.hatOwner;
@@ -42,10 +44,12 @@ public class SaveLoadController : Singleton<SaveLoadController>
         }
         else
         {
-            
-            gold = 0;
+
+            vibrate = 1;
+            gold = 1000;
             currentHat = currentPant = currentShield = currentSkin = -1;
             currentWeapon = Constant.WEAPON_BOOMERANG;
+
         }
         //Debug.Log(data.gold);
     }
@@ -55,13 +59,13 @@ public class SaveLoadController : Singleton<SaveLoadController>
         if (Input.GetKeyDown(KeyCode.P))
         {
             player = FindObjectOfType<Player>();
-            gold += 9999;
+            gold += 999;
             SaveData(player);
         }
         if (Input.GetKeyDown(KeyCode.L))
         {
-            //LevelManager.Instance.NextLevel();
-            Debug.Log(currentHat);
+            LevelManager.Instance.NextLevel();
+            //Debug.Log(currentHat);
         }
     }
 
@@ -80,7 +84,8 @@ public class SaveLoadController : Singleton<SaveLoadController>
         data.currentShield = currentShield;
         data.currentSkin = currentSkin;
         data.currentWeapon = player.currentWeapon.ToString();
+
         SaveLoadManager.SaveData(data, "savegame.dat");
-        Debug.Log(data.currentHat);
+        Debug.Log(data.vibrate);
     }
 }

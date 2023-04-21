@@ -9,7 +9,11 @@ public class Character : MonoBehaviour
     public Dictionary<string, GameObject> weaponDict = new Dictionary<string, GameObject>();
     public bool isPlayer;
     public AttackRange atkRange;
+    public Transform bodyScale;
+    public GameObject aim;
+    public Vector3 targetPos;
 
+    [SerializeField] private List<ParticleSystem> pS;
     [SerializeField] private Animator anim;
     private string currentAnimName;
 
@@ -58,6 +62,10 @@ public class Character : MonoBehaviour
         weaponDict.Add(Constant.WEAPON_AXE, weaponList[0]);
         weaponDict.Add(Constant.WEAPON_BOOMERANG, weaponList[1]);
         weaponDict.Add(Constant.WEAPON_SWORD, weaponList[2]);
+        weaponDict.Add(Constant.WEAPON_Z, weaponList[3]);
+        weaponDict.Add(Constant.WEAPON_CANDY, weaponList[4]);
+        weaponDict.Add(Constant.WEAPON_HAMMER, weaponList[5]);
+        weaponDict.Add(Constant.WEAPON_UZI, weaponList[6]);
     }
     public void RefreshEnemyInRange()
     {
@@ -74,13 +82,13 @@ public class Character : MonoBehaviour
     }
     public virtual void Attack(Vector3 targetPosition) 
     {
-        if (!isDead && Vector3.Distance(TF.position, targetPosition) - (atkRange.radius * atkRange.TF.localScale.x) < 0.1f)
+        if (!isDead /*&& Vector3.Distance(TF.position, targetPosition) - (atkRange.radius * atkRange.TF.localScale.x) < 0.1f*/)
         {
-            //Debug.Log(atkRange.radius * atkRange.TF.localScale.x);
-            Vector3 throwDirection = (targetPosition - throwPoint.position).normalized;
-            //transform.rotation = Quaternion.LookRotation(throwDirection);
+            targetPos = targetPosition;
+            ChangeAnim(Constant.ANIM_ATTACK);
+            //Vector3 throwDirection = (targetPosition - throwPoint.position).normalized;
             tf.LookAt(targetPosition);
-            StartCoroutine(IEThrow(targetPosition));
+            //StartCoroutine(IEThrow(targetPosition));
         }
     }
     public IEnumerator IEThrow(Vector3 targetPosition)
@@ -102,7 +110,7 @@ public class Character : MonoBehaviour
         }
         else
         {
-            weapon.SetOwner(this);
+            weapon.SetOwner(this as Bot);
             weapon.playerOwner = false;
         }
 
@@ -114,8 +122,7 @@ public class Character : MonoBehaviour
         {
             //weapon.TF.LookAt(throwDirection);
             //weapon.GetComponent<Sword>().onAttack = true;
-            //weapon.GetComponent<Sword>().throwDirection = throwDirection;
-            weapon.TF.rotation = TF.rotation;
+            //weapon.TF.rotation = TF.rotation;
         }
         weapon.RB.AddForce(throwDirection * throwForce);
 
@@ -153,6 +160,10 @@ public class Character : MonoBehaviour
                 }
             }
         }
+        if (this.isPlayer)
+        {
+            removeCharacter.aim.SetActive(true);
+        }
         //targetListInRange.Remove(removeCharacter);
         return nearestBotPotition;
     }
@@ -174,5 +185,54 @@ public class Character : MonoBehaviour
     {
         GameObject obj = Instantiate(bloodHitEffect, bodyPoint.transform);
         obj.transform.localPosition = Vector3.zero;
+    }
+
+
+    public void Throw()
+    {
+        Weapon weapon = Cache.GetWeapon(ObjectPoolPro.Instance.GetFromPool(currentWeapon.ToString()));
+        weapon.TF.position = throwPoint.position;
+        weapon.gameObject.SetActive(true);
+
+
+        // Kiem tra xem vu khi co phai cua player ? 
+        if (isPlayer)
+        {
+            weapon.SetOwner(null);
+            weapon.playerOwner = true;
+
+            //SoundManager.Instance.PlaySFX(1);
+            SoundManager.Instance.PlaySound(1);
+        }
+        else
+        {
+            weapon.SetOwner(this as Bot);
+            weapon.playerOwner = false;
+        }
+
+        // Xac dinh huong nem
+        Vector3 throwDirection = (targetPos - throwPoint.position).normalized;
+        //TODO: fix this (DONE)
+
+
+        weapon.RB.AddForce(throwDirection * throwForce);
+
+
+
+    }
+    public void PlayParticle(int index)
+    {
+        pS[index].Play();
+    }
+    public void PlayParticleForTime(int index,float time)
+    {
+        StartCoroutine(PlayParticleForTimeCoroutine(index, time));
+    }
+
+    public IEnumerator PlayParticleForTimeCoroutine(int index, float time)
+    {
+        pS[index].Play();
+        yield return new WaitForSeconds(time);
+        pS[index].Stop();
     }
 }

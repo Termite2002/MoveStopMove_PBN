@@ -16,7 +16,7 @@ public class UIWeapon : UICanvas
 
     private void OnEnable()
     {
-        ChangeAnim("OpenWeapon");
+        ChangeAnim(Constant.ANIM_OPEN_WEAPON);
         coinText.text = SaveLoadController.Instance.gold.ToString();
     }
     private void Start()
@@ -28,7 +28,7 @@ public class UIWeapon : UICanvas
     }
     public void CloseButton()
     {
-        ChangeAnim("CloseWeapon");
+        ChangeAnim(Constant.ANIM_CLOSE_WEAPON);
         UIManager.Instance.OpenUI<UIMainMenu>();
         Close(0.5f);
         WeaponShopController.Instance.ResetWhenClickCloseButton();
@@ -73,6 +73,7 @@ public class UIWeapon : UICanvas
         {
             UIManager.Instance.player.currentWeapon = (WeaponType)System.Enum.Parse(typeof(WeaponType), WeaponShopController.Instance.namesWeaponDisplay[WeaponShopController.Instance.currentWeaponDisplay]);
             UIManager.Instance.player.RenderWeaponToHold();
+            ChangeWeapon.Instance.ChangeRangeWhenChangeWeapon(UIManager.Instance.player.currentWeapon, UIManager.Instance.player);
 
             equipButton.SetActive(false);
             unequipButton.SetActive(true);

@@ -19,5 +19,6 @@ public class GamePlay : UICanvas
     public void SettingButton()
     {
         UIManager.Instance.OpenUI<Setting>();
+        LevelManager.Instance.SetJoystickOff();
     }
 }

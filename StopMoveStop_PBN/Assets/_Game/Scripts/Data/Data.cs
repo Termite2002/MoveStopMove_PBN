@@ -9,6 +9,8 @@ public class Data
 {
     public int gold;
 
+    public int vibrate;
+
     public int level_id;
     public int currentHat, currentPant, currentShield, currentSkin;
 

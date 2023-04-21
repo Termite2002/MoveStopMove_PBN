@@ -5,52 +5,70 @@ using UnityEngine.UI;
 
 public class UISetting : UICanvas
 {
-    Player player;
     public Image soundOn, soundOff, vibrationOn, vibrationOff;
     private void OnEnable()
     {
-        //player = FindObjectOfType<Player>();
-        //player.GetComponent<PlayerController>().enabled = false;
-        ChangeAnim("OpenSetting");
+        ChangeAnim(Constant.ANIM_OPEN_SETTING);
     }
     public void ContinueButton()
     {
-        ChangeAnim("CloseSetting");
-        Close(0.5f);
-    }
-    public void HomeButton()
-    {
-        if (UIManager.Instance.IsOpened<UIMainMenu>())
+        if (UIManager.Instance.IsOpened<UIGameplay>())
         {
-            ChangeAnim("CloseSetting");
+            ChangeAnim(Constant.ANIM_CLOSE_SETTING);
             Close(0.5f);
+            LevelManager.Instance.SetJoystickOn();
         }
         else
         {
-            ChangeAnim("CloseSetting");
+            ChangeAnim(Constant.ANIM_CLOSE_SETTING);
             Close(0.5f);
             UIManager.Instance.CloseAll();
             UIManager.Instance.OpenUI<UIMainMenu>();
         }
     }
+    public void HomeButton()
+    {
+        if (UIManager.Instance.IsOpened<UIMainMenu>())
+        {
+            ChangeAnim(Constant.ANIM_CLOSE_SETTING);
+            Close(0.5f);
+        }
+        else
+        {
+            LevelManager.Instance.DeleteLevel();
+            ChangeAnim(Constant.ANIM_CLOSE_SETTING);
+            Close(0.5f);
+            UIManager.Instance.CloseAll();
+            UIManager.Instance.OpenUI<UIMainMenu>();
+        }
+        LevelManager.Instance.SetJoystickOff();
+    }
     public void SoundButtonOn()
     {
         soundOn.enabled = true;
         soundOff.enabled = false;
+
+        SoundManager.Instance.MuteSound();
     }
     public void SoundButtonOff()
     {
         soundOn.enabled = false;
         soundOff.enabled = true;
+
+        SoundManager.Instance.TurnOnMusic();
     }
     public void VibraButtonOn()
     {
         vibrationOn.enabled = true;
         vibrationOff.enabled = false;
+
+        SaveLoadController.Instance.vibrate = 0;
     }
     public void VibraButtonOff()
     {
         vibrationOn.enabled = false;
         vibrationOff.enabled = true;
+
+        SaveLoadController.Instance.vibrate = 1;
     }
 }

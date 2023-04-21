@@ -7,7 +7,6 @@ public class BotSpawner : MonoBehaviour
     public SphereCollider sCollider;
     [SerializeField] private LevelController lvController;
     [SerializeField] private float radius;
-
     protected Transform tf;
     public Transform TF
     {
@@ -60,9 +59,18 @@ public class BotSpawner : MonoBehaviour
     public void SpawnBot(LevelController new_lv)
     {
         lvController = new_lv;
-        GameObject bot = ObjectPoolPro.Instance.GetFromPool("Bot");
+        GameObject bot = ObjectPoolPro.Instance.GetFromPool(Constant.GAME_BOT);
         bot.transform.position = TF.position;
         bot.SetActive(true);
+        if (bot.GetComponent<Bot>().checkLoad != LevelManager.Instance.ResetCheck)
+        {
+            bot.GetComponent<Bot>().OnNewLevel();
+            bot.GetComponent<Bot>().checkLoad = LevelManager.Instance.ResetCheck;
+        }
+        //else if (bot.GetComponent<Bot>().levelHeadPoint != null)
+        //{
+            bot.GetComponent<Bot>().AddHeadPoint();
+        //}
         bot.GetComponent<Bot>().IsDead = false;
         bot.GetComponent<Bot>().lvController = new_lv;
         lvController.allAlivePosition.Add(bot.GetComponent<Bot>());

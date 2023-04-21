@@ -5,7 +5,7 @@ using UnityEngine;
 public class LevelController : MonoBehaviour
 {
     public List<Character> allAlivePosition = new List<Character>();
-    public int allAlive = 16;
+    public int allAlive = 100;
 
     public void OnClearLevel()
     {
@@ -18,7 +18,7 @@ public class LevelController : MonoBehaviour
         }
         allAlivePosition.RemoveAll(Character => !Character.isPlayer);
 
-        allAlive = 16;
+        allAlive = 100;
     }
 
     // Ham chua su dung

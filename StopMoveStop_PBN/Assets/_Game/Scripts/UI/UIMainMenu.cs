@@ -8,23 +8,25 @@ public class UIMainMenu : UICanvas
     public Text coinText;
     private void OnEnable()
     {
-        ChangeAnim("OpenMenu");
+        ChangeAnim(Constant.ANIM_OPEN_MENU);
         coinText.text = SaveLoadController.Instance.gold.ToString();
     }
     public void PlayButton()
     {
-        ChangeAnim("CloseMenu");
+        ChangeAnim(Constant.ANIM_CLOSE_MENU);
         UIManager.Instance.OpenUI<UIGameplay>();
         LevelManager.Instance.OnStart();
         Close(0.5f);
     }
     public void SettingButton()
     {
+        ChangeAnim(Constant.ANIM_CLOSE_MENU);
         UIManager.Instance.OpenUI<UISetting>();
+        Close(0.5f);
     }
     public void ShopButton()
     {
-        ChangeAnim("CloseMenu");
+        ChangeAnim(Constant.ANIM_CLOSE_MENU);
         UIManager.Instance.OpenUI<UIShop>();
 
         CameraFollow.Instance.StartZoomIn();
@@ -33,7 +35,7 @@ public class UIMainMenu : UICanvas
     }
     public void WeaponButton()
     {
-        ChangeAnim("CloseMenu");
+        ChangeAnim(Constant.ANIM_CLOSE_MENU);
         UIManager.Instance.OpenUI<UIWeapon>();
 
         Close(0.5f);
